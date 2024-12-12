@@ -430,7 +430,7 @@ makeServiceAccountJob:
 
 ## List of buckets to be created after minio install
 ##
-buckets: []
+buckets: 
   #   # Name of the bucket
   - name: dc-backups-bucket
     # Policy to be set on the
