@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 ## set kubernetes cluster domain where minio is running
 ##
-clusterDomain: cluster.local
+clusterDomain: cpt.gov.vn
 
 ## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
 ##
@@ -29,7 +29,7 @@ mcImage:
   pullPolicy: IfNotPresent
 
 ## minio mode, i.e. standalone or distributed
-mode: distributed ## other supported values are "standalone"
+mode: standalone ## other supported values are "standalone"
 
 ## Additional labels to include with deployment or statefulset
 additionalLabels: {}
@@ -90,8 +90,8 @@ runtimeClassName: ""
 ## rootUser and rootPassword is generated when not set
 ## Distributed MinIO ref: https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html
 ##
-rootUser: ""
-rootPassword: ""
+rootUser: "admin"
+rootPassword: "admin"
 
 ## Use existing Secret that store following variables:
 ##
@@ -120,7 +120,7 @@ bucketRoot: ""
 # Number of drives attached to a node
 drivesPerNode: 1
 # Number of MinIO containers running
-replicas: 16
+replicas: 3
 # Number of expanded MinIO clusters
 pools: 1
 
@@ -162,7 +162,7 @@ persistence:
   storageClass: ""
   volumeName: ""
   accessMode: ReadWriteOnce
-  size: 500Gi
+  size: 10Gi
 
   ## If subPath is set mount a sub folder of a volume instead of the root of the volume.
   ## This is especially handy for volume plugins that don't natively support sub mounting (like glusterfs).
@@ -198,7 +198,7 @@ service:
 ##
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: ~
   labels: {}
     # node-role.kubernetes.io/ingress: platform
@@ -212,7 +212,7 @@ ingress:
     # nginx.ingress.kubernetes.io/whitelist-source-range: 0.0.0.0/0
   path: /
   hosts:
-    - minio-example.local
+    - minio.cpt.gov.vn
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -239,7 +239,7 @@ consoleService:
   externalTrafficPolicy: Cluster
 
 consoleIngress:
-  enabled: false
+  enabled: true
   ingressClassName: ~
   labels: {}
     # node-role.kubernetes.io/ingress: platform
@@ -253,7 +253,7 @@ consoleIngress:
     # nginx.ingress.kubernetes.io/whitelist-source-range: 0.0.0.0/0
   path: /
   hosts:
-    - console.minio-example.local
+    - console.minio.cpt.gov.vn
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -290,7 +290,7 @@ podLabels: {}
 ##
 resources:
   requests:
-    memory: 16Gi
+    memory: 2Gi
 
 ## List of policies to be created after minio install
 ##
@@ -432,18 +432,18 @@ makeServiceAccountJob:
 ##
 buckets: []
   #   # Name of the bucket
-  # - name: bucket1
-  #   # Policy to be set on the
-  #   # bucket [none|download|upload|public]
-  #   policy: none
-  #   # Purge if bucket exists already
-  #   purge: false
-  #   # set versioning for
-  #   # bucket [true|false]
-  #   versioning: false # remove this key if you do not want versioning feature
-  #   # set objectlocking for
-  #   # bucket [true|false] NOTE: versioning is enabled by default if you use locking
-  #   objectlocking: false
+  - name: dc-backups-bucket
+    # Policy to be set on the
+    # bucket [none|download|upload|public]
+    policy: public
+    # Purge if bucket exists already
+    purge: false
+    # set versioning for
+    # bucket [true|false]
+    versioning: false # remove this key if you do not want versioning feature
+    # set objectlocking for
+    # bucket [true|false] NOTE: versioning is enabled by default if you use locking
+    objectlocking: false
   # - name: bucket2
   #   policy: none
   #   purge: false
