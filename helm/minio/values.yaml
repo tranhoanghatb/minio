@@ -159,7 +159,7 @@ persistence:
   ##
   ## Storage class of PV to bind. By default it looks for standard storage class.
   ## If the PV uses a different storage class, specify that here.
-  storageClass: ""
+  storageClass: "rook-cephfs"
   volumeName: ""
   accessMode: ReadWriteOnce
   size: 10Gi
